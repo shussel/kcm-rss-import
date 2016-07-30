@@ -14,11 +14,11 @@
  *
  * @wordpress-plugin
  * Plugin Name:       KCM RSS Import
- * Plugin URI:        http://later
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Plugin URI:        https://github.com/shussel/kcm-rss-import
+ * Description:       Automatically import your Personalized Posts&trade; from Keeping Current Matters.
  * Version:           1.0.0
  * Author:            Shane Hussel
- * Author URI:        http://none
+ * Author URI:        https://github.com/shussel
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       kcm-rss-import

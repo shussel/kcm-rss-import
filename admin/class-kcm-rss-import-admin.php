@@ -100,4 +100,30 @@ class Kcm_Rss_Import_Admin {
 
 	}
 
+	/**
+	 * Add an options page under the Settings submenu
+	 *
+	 * @since  1.0.0
+	 */
+	public function add_options_page() {
+	
+		$this->plugin_screen_hook_suffix = add_options_page(
+			__( 'KCM RSS Import Settings', 'kcm-rss-import' ),
+			__( 'KCM RSS Import', 'kcm-rss-import' ),
+			'manage_options',
+			$this->plugin_name,
+			array( $this, 'display_options_page' )
+		);
+	
+	}
+
+	/**
+	 * Render the options page for plugin
+	 *
+	 * @since  1.0.0
+	 */
+	public function display_options_page() {
+		include_once 'partials/kcm-rss-import-admin-display.php';
+	}
+
 }
