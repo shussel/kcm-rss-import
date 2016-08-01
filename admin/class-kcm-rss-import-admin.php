@@ -39,6 +39,15 @@ class Kcm_Rss_Import_Admin {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
+	
+	/**
+	 * The options name to be used in this plugin
+	 *
+	 * @since  	1.0.0
+	 * @access 	private
+	 * @var  	string 		$option_name 	Option name of this plugin
+	 */
+	private $option_name = 'kcm_rss_import';
 
 	/**
 	 * Initialize the class and set its properties.
@@ -124,6 +133,126 @@ class Kcm_Rss_Import_Admin {
 	 */
 	public function display_options_page() {
 		include_once 'partials/kcm-rss-import-admin-display.php';
+	}
+
+	/**
+	 * Add settings action link to the plugins page.
+	 *
+	 * @since    1.0.0
+	 */
+	 
+	public function add_action_links( $links ) {
+	   $settings_link = array(
+		'<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', $this->plugin_name) . '</a>',
+	   );
+	   return array_merge(  $settings_link, $links );
+	}
+
+	/**
+	 * Register settings for plugin
+	 *
+	 * @since  1.0.0
+	 */
+	public function init() {
+
+		register_setting( $this->plugin_name, $this->option_name . '_member_id' );
+		register_setting( $this->plugin_name, $this->option_name . '_category' );
+		
+		// add sections
+		add_settings_section(
+			$this->option_name . '_account',
+			__( 'Account Info', 'kcm-rss-import' ),
+			array( $this, 'section_callback' ),
+			$this->plugin_name
+		);
+
+		add_settings_section(
+			$this->option_name . '_import',
+			__( 'Import Settings', 'kcm-rss-import' ),
+			array( $this, 'section_callback' ),
+			$this->plugin_name
+		);
+
+		// Add Member ID setting
+		add_settings_field(
+			$this->option_name . '_member_id',
+			__( 'KCM Member ID', 'kcm-rss-import' ),
+			array( $this, $this->option_name . '_member_id_cb' ),
+			$this->plugin_name,
+			$this->option_name . '_account',
+			array( 'label_for' => $this->option_name . '_member_id' )
+		);	
+		
+		// Add Member ID setting
+		add_settings_field(
+			$this->option_name . '_category',
+			__( 'Add Posts to Category', 'kcm-rss-import' ),
+			array( $this, $this->option_name . '_category_cb' ),
+			$this->plugin_name,
+			$this->option_name . '_import',
+			array( 'label_for' => $this->option_name . '_category' )
+		);
+	}
+
+	/**
+	 * Display section info
+	 *
+	 * @since  1.0.0
+	 */
+	public function section_callback( $arguments ) {
+		switch( $arguments['id'] ){
+			case $this->option_name . '_account':
+				echo 'Enter your 39 digit member id from your RSS link to activate the import.';
+				break;
+			case $this->option_name . '_import':
+				echo 'Select the category into which your posts are imported.';
+				break;
+		}
+	}
+
+	/**
+	 * Render the member id input for this plugin
+	 *
+	 * @since  1.0.0
+	 */
+	public function kcm_rss_import_member_id_cb() {
+		$member_id = get_option( $this->option_name . '_member_id' );
+		echo '<input type="text" size="40" name="' . $this->option_name . '_member_id' . '" id="' . $this->option_name . '_member_id' . '" value="' . $member_id . '"><span class="description"> Enter everything after"a=" in your RSS URL</span>';
+	}
+
+	/**
+	 * Render the member id input for this plugin
+	 *
+	 * @since  1.0.0
+	 */
+	public function kcm_rss_import_category_cb() {
+
+		$category = get_option( $this->option_name . '_category' );
+
+		$args = array(
+			'show_option_all'    => '',
+			'show_option_none'   => '',
+			'option_none_value'  => '-1',
+			'orderby'            => 'ID',
+			'order'              => 'ASC',
+			'show_count'         => 0,
+			'hide_empty'         => 0,
+			'child_of'           => 0,
+			'exclude'            => '',
+			'include'            => '',
+			'echo'               => 1,
+			'selected'           => $category,
+			'hierarchical'       => 0,
+			'name'               => 'kcm_rss_import_category',
+			'id'                 => '',
+			'class'              => 'postform',
+			'depth'              => 0,
+			'tab_index'          => 0,
+			'taxonomy'           => 'category',
+			'hide_if_empty'      => false,
+			'value_field'	     => 'term_id',
+		);
+		wp_dropdown_categories( $args );
 	}
 
 }
