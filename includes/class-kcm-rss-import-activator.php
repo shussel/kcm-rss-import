@@ -31,8 +31,10 @@ class Kcm_Rss_Import_Activator {
 	 */
 	public static function activate() {
 
-		// load options
-		$options = get_option( 'kcm_rss_import');
+		// set default options
+		if (!($options = get_option( 'kcm_rss_import')) ) {
+			add_option( 'kcm_rss_import', array( 'member_id' => '', 'category' => 0, 'latest' => 0) );
+		}
 
 		// schedule if member id exists
 		if ($options['member_id']) {
