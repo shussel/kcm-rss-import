@@ -1,114 +1,30 @@
 === Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://none
-Tags: comments, spam
+Donate link: https://github.com/shussel/kcm-rss-import
+Tags: KCM, rss, import
 Requires at least: 3.0.1
 Tested up to: 3.4
 Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+This plugin imports RSS content from the Keeping Current Matters Blog.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
-
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
-
-A few notes about the sections above:
-
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+Personalized Posts™ lets you share a fully-branded version of the daily posts from our KCM Blog. This feature is all about helping you stand out as the market expert. This WordPress plugin automatically imports your Personalized Posts into your own WordPress website, allowing you to share our posts and use all the tools at your disposal in WordPress to customize them further.
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+1.Click the Download Plugin button to download the plugin .zip file to your computer.
+2. Go to the plugins page in your WordPress site dashboard.
+3. Click the “Add New” button.
+4. Click “Upload Plugin” then choose and install the file you downloaded in step 1.
+5. Click “Activate Plugin” to complete the plugin install.
+6. Go to the Settings page for the plugin. Enter your KCM Member ID (everything after “a=” in your Personalized Posts RSS Link) and select the post category on your site into which you would like KCM posts to be imported.
+7. Click “Save Changes” to finish setup.
 
-e.g.
+Once you have saved your settings, all current posts in the KCM RSS feed will be imported into your site as WordPress posts. New posts will continue to be added on a daily basis as they appear in the KCM feed.
 
-1. Upload `kcm-rss-import.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+Once imported, these posts are controlled on your site by your WordPress settings. You can edit, delete, re categorize them, or do anything else you can do through your WordPress dashboard. Display options are controlled by your site, so the posts may not appear exactly as they do on the KCM site.
 
-== Frequently Asked Questions ==
-
-= A question that someone might have =
-
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
-
-== Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
-
-== Changelog ==
-
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+New daily posts will continue to be downloaded to your site as long as the plugin is active. To stop downloading new posts, deactivate the plugin. If you deactivate the plugin, any existing posts on your site will not be deleted. You may reactivate the plugin to resume the import of new posts at any time.

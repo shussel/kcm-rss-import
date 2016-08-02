@@ -5,7 +5,7 @@
  *
  * This file is used to markup the admin-facing aspects of the plugin.
  *
- * @link       http://none
+ * @link       https://github.com/shussel/kcm-rss-import
  * @since      1.0.0
  *
  * @package    Kcm_Rss_Import

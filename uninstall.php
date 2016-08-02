@@ -3,7 +3,7 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * @link       http://none
+ * @link       https://github.com/shussel/kcm-rss-import
  * @since      1.0.0
  *
  * @package    Kcm_Rss_Import
@@ -14,5 +14,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-// delete options
+// delete plugin options
 delete_option( 'kcm_rss_import' );

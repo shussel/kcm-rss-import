@@ -1,7 +1,14 @@
 <?php
 
 /**
- * Main plugin class
+ * Plugin admin functionality.
+ *
+ * Creates and updates plugin options and settings.
+ *
+ * @since      1.0.0
+ * @package    Kcm_Rss_Import
+ * @subpackage Kcm_Rss_Import/admin
+ * @author     Shane Hussel <shussel@gmail.com>
  */
 class Kcm_Rss_Import_Admin {
 
@@ -101,7 +108,7 @@ class Kcm_Rss_Import_Admin {
 	}
 
 	/**
-	 * Add settings action link to the plugins page.
+	 * Add settings action link to the plugins page
 	 *
 	 * @since    1.0.0
 	 */
@@ -198,7 +205,7 @@ class Kcm_Rss_Import_Admin {
 	}
 
 	/**
-	 * Run after options are updated
+	 * Run after options are updated. Schedules cron update
 	 *
 	 * @since  1.0.0
 	 */
@@ -209,7 +216,7 @@ class Kcm_Rss_Import_Admin {
 			
 			// schedule import if not already scheduled
 			if (!wp_next_scheduled( 'kcm_import_rss' ) ) {	
-				wp_schedule_event( time(), 'two_minutes', 'kcm_import_rss' );
+				wp_schedule_event( time(), 'hourly', 'kcm_import_rss' );
 			}
 
 		// unschedule if member id blank

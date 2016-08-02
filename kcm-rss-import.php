@@ -2,7 +2,7 @@
 
 /**
  *
- * @link              http://none
+ * @link              https://github.com/shussel/kcm-rss-import
  * @since             1.0.0
  * @package           Kcm_Rss_Import
  *
@@ -97,11 +97,8 @@ class Kcm_Rss_Import {
 	 */
 	private function __construct() {
 		
-		// setup import hook
+		// setup import hook for cron
 		add_action( 'kcm_import_rss',  array( $this, 'import_rss' ) );
-
-		// Add custom cron interval
-		add_filter( 'cron_schedules', array( $this,'add_custom_cron_intervals'), 10, 1 );
 
 		// load admin functionality
 		if ( is_admin() ) {
@@ -124,11 +121,15 @@ class Kcm_Rss_Import {
 		return self::$instance;
 	}
 	
+	/**
+	 * Cron function to import posts from the KCM RSS feed.
+	 *
+	 * @return Kcm_Rss_Import
+	 */
 	public function import_rss() {
 
 		// load options
 		$this->options = get_option( $this->options_name );
-
 		$latest = $this->options['latest'];
 
 		// set url
@@ -147,9 +148,10 @@ class Kcm_Rss_Import {
 		curl_close($curl);
 		$xml = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
 
+		// process posts
 		foreach ($xml->channel->item as $item) {
 
-			// quit if post is before last update
+			// quit on first post before last update
 			if ( strtotime($item->pubDate) <= $latest) break;
 
 			$post['post_date'] = date("Y-m-d H:i:s", strtotime($item->pubDate));
@@ -165,24 +167,13 @@ class Kcm_Rss_Import {
 			}
 		}
 
-		// save new latest entry time
+		// save latest entry time
 		if (strtotime($xml->channel->item[0]->pubDate)) {
 
 			$this->options['latest'] = strtotime($xml->channel->item[0]->pubDate);
 			update_option( $this->options_name, $this->options );
 
 		}
-	}
-
-	public function add_custom_cron_intervals( $schedules ) {
-		// $schedules stores all recurrence schedules within WordPress
-		$schedules['two_minutes'] = array(
-			'interval'	=> 120,	// Number of seconds, 120 in 2 minutes
-			'display'	=> 'Once Every 2 Minutes'
-		);
-
-		// Return our newly added schedule to be merged into the others
-		return (array)$schedules; 
 	}
 }
 

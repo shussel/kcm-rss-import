@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Fired during plugin deactivation
- *
- * @link       http://none
- * @since      1.0.0
- *
- * @package    Kcm_Rss_Import
- * @subpackage Kcm_Rss_Import/includes
- */
-
-/**
  * Fired during plugin deactivation.
  *
  * This class defines all code necessary to run during the plugin's deactivation.
