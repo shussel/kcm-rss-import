@@ -48,6 +48,7 @@ class Kcm_Rss_Import_Admin {
 
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
+		add_action( 'update_option_' . $this->options_name, array( $this, 'update_options' ), 10, 2 );
 
 		// Add settings link to plugin
 		add_filter( 'plugin_action_links_' . plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' ), array( $this, 'add_action_links' ) );
@@ -194,5 +195,16 @@ class Kcm_Rss_Import_Admin {
 			'value_field'	     => 'term_id',
 		);
 		wp_dropdown_categories( $args );
+	}
+
+	/**
+	 * Run after options are updated
+	 *
+	 * @since  1.0.0
+	 */
+	public function update_options( $old_value, $new_value ) {
+
+		do_action('kcm_import_rss');
+
 	}
 }

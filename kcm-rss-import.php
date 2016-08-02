@@ -1,12 +1,6 @@
 <?php
 
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
  *
  * @link              http://none
  * @since             1.0.0
@@ -101,7 +95,10 @@ class Kcm_Rss_Import {
 	 *
 	 * @return void
 	 */
-	private function __construct() {		
+	private function __construct() {
+		
+		// setup import hook
+		add_action( 'kcm_import_rss',  array( $this, 'import_rss' ) );
 
 		// load admin functionality
 		if ( is_admin() ) {
@@ -122,7 +119,44 @@ class Kcm_Rss_Import {
 		if ( !self::$instance )
 			self::$instance = new self;
 		return self::$instance;
-	}	
+	}
+	
+	public function import_rss() {
+
+		// load options
+		$this->options = get_option( $this->options_name );
+
+		// set url
+		$feed_url = "http://www.simplifyingthemarket.com/en/feed/?a=" . $this->options['member_id'];
+
+		$curl = curl_init();
+		curl_setopt_array($curl, Array(
+			CURLOPT_URL            => $feed_url,
+			CURLOPT_USERAGENT      => 'kcm-rss-import',
+			CURLOPT_TIMEOUT        => 120,
+			CURLOPT_CONNECTTIMEOUT => 30,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_ENCODING       => 'UTF-8'
+		));
+		$data = curl_exec($curl);
+		curl_close($curl);
+		$xml = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+		foreach ($xml->channel->item as $item) {
+
+			$post['post_date'] = date("Y-m-d H:i:s", strtotime($item->pubDate));
+			$post['post_title'] = $item->title;
+			$post['post_excerpt'] = $item->description;
+			$post['post_content'] = $item->children('http://purl.org/rss/1.0/modules/content/')->encoded;
+			$post['post_status'] = 'publish';
+
+			$post_id = wp_insert_post( $post, true );
+
+			if ($post_id && $this->options['category']) {
+				wp_set_post_categories( $post_id, $this->options['category'] );
+			}
+		}
+	}
 }
 
 // Instantiate class
