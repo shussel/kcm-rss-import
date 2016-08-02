@@ -31,6 +31,17 @@ class Kcm_Rss_Import_Activator {
 	 */
 	public static function activate() {
 
+		// load options
+		$options = get_option( 'kcm_rss_import');
+
+		// schedule if member id exists
+		if ($options['member_id']) {
+			
+			// schedule import if not already scheduled
+			if (!wp_next_scheduled( 'kcm_import_rss' ) ) {	
+				wp_schedule_event( time(), 'hourly', 'kcm_import_rss' );
+			}
+		}
 	}
 
 }

@@ -161,7 +161,7 @@ class Kcm_Rss_Import_Admin {
 	 * @since  1.0.0
 	 */
 	public function kcm_rss_import_member_id_cb() {
-		echo '<input type="text" size="40" name="' . $this->options_name . '[member_id]' . '" id="' . $this->options_name . '_member_id' . '" value="' . $this->options['member_id'] . '"><p class="description"> Enter everything after"a=" in your RSS URL</p>';
+		echo '<input type="text" size="40" name="' . $this->options_name . '[member_id]' . '" id="' . $this->options_name . '_member_id' . '" value="' . $this->options['member_id'] . '"><p class="description"> Enter everything after"a=" in your RSS URL</p><input type="hidden" name="' . $this->options_name . '[latest]' . '" value="' . $this->options['latest'] . '">';
 	}
 
 	/**
@@ -204,7 +204,21 @@ class Kcm_Rss_Import_Admin {
 	 */
 	public function update_options( $old_value, $new_value ) {
 
-		do_action('kcm_import_rss');
+		// schedule if member id exists
+		if ($new_value['member_id']) {
+			
+			// schedule import if not already scheduled
+			if (!wp_next_scheduled( 'kcm_import_rss' ) ) {	
+				wp_schedule_event( time(), 'two_minutes', 'kcm_import_rss' );
+			}
 
+		// unschedule if member id blank
+		} else {
+
+			// unschedule import if already scheduled
+			if ($timestamp = wp_next_scheduled( 'kcm_import_rss' ) ) {	
+				wp_unschedule_event( $timestamp, 'kcm_import_rss' );
+			}
+		}
 	}
 }

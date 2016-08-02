@@ -100,6 +100,9 @@ class Kcm_Rss_Import {
 		// setup import hook
 		add_action( 'kcm_import_rss',  array( $this, 'import_rss' ) );
 
+		// Add custom cron interval
+		add_filter( 'cron_schedules', array( $this,'add_custom_cron_intervals'), 10, 1 );
+
 		// load admin functionality
 		if ( is_admin() ) {
 
@@ -126,6 +129,8 @@ class Kcm_Rss_Import {
 		// load options
 		$this->options = get_option( $this->options_name );
 
+		$latest = $this->options['latest'];
+
 		// set url
 		$feed_url = "http://www.simplifyingthemarket.com/en/feed/?a=" . $this->options['member_id'];
 
@@ -144,18 +149,40 @@ class Kcm_Rss_Import {
 
 		foreach ($xml->channel->item as $item) {
 
+			// quit if post is before last update
+			if ( strtotime($item->pubDate) <= $latest) break;
+
 			$post['post_date'] = date("Y-m-d H:i:s", strtotime($item->pubDate));
 			$post['post_title'] = $item->title;
 			$post['post_excerpt'] = $item->description;
 			$post['post_content'] = $item->children('http://purl.org/rss/1.0/modules/content/')->encoded;
 			$post['post_status'] = 'publish';
 
-			$post_id = wp_insert_post( $post, true );
+			$post_id = wp_insert_post( $post );
 
 			if ($post_id && $this->options['category']) {
 				wp_set_post_categories( $post_id, $this->options['category'] );
 			}
 		}
+
+		// save new latest entry time
+		if (strtotime($xml->channel->item[0]->pubDate)) {
+
+			$this->options['latest'] = strtotime($xml->channel->item[0]->pubDate);
+			update_option( $this->options_name, $this->options );
+
+		}
+	}
+
+	public function add_custom_cron_intervals( $schedules ) {
+		// $schedules stores all recurrence schedules within WordPress
+		$schedules['two_minutes'] = array(
+			'interval'	=> 120,	// Number of seconds, 120 in 2 minutes
+			'display'	=> 'Once Every 2 Minutes'
+		);
+
+		// Return our newly added schedule to be merged into the others
+		return (array)$schedules; 
 	}
 }
 

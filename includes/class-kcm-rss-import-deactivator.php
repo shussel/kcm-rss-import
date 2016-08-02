@@ -31,6 +31,10 @@ class Kcm_Rss_Import_Deactivator {
 	 */
 	public static function deactivate() {
 
+		// unschedule import if already scheduled
+		if ($timestamp = wp_next_scheduled( 'kcm_import_rss' ) ) {	
+			wp_unschedule_event( $timestamp, 'kcm_import_rss' );
+		}
 	}
 
 }
