@@ -73,6 +73,15 @@ class Kcm_Rss_Import {
 	private $option_name = 'kcm_rss_import';
 
 	/**
+	 * Array of options
+	 *
+	 * @since  	1.0.0
+	 * @access 	private
+	 * @var  	string 		$option_name 	Option name of this plugin
+	 */
+	private $options;
+
+	/**
 	 * Static property to hold our singleton instance
 	 *
 	 */
@@ -84,13 +93,19 @@ class Kcm_Rss_Import {
 	 * @return void
 	 */
 	private function __construct() {
-		
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
 
-		// Add settings link to plugin
-		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
-		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
+		// load admin only functionality
+		if ( is_admin() ) {
+			
+			add_action( 'admin_init', array( $this, 'admin_init' ) );
+			add_action( 'admin_menu', array( $this, 'add_options_page' ) );
+
+			// Add settings link to plugin
+			add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'add_action_links' ) );
+		}
+
+		// load options
+		$this->options = get_option( $this->option_name );
 	}
 
 	/**
@@ -112,8 +127,7 @@ class Kcm_Rss_Import {
 	 */
 	public function admin_init() {
 
-		register_setting( $this->plugin_name, $this->option_name . '_member_id' );
-		register_setting( $this->plugin_name, $this->option_name . '_category' );
+		register_setting( $this->plugin_name, $this->option_name );
 		
 		// add sections
 		add_settings_section(
@@ -212,8 +226,7 @@ class Kcm_Rss_Import {
 	 * @since  1.0.0
 	 */
 	public function kcm_rss_import_member_id_cb() {
-		$member_id = get_option( $this->option_name . '_member_id' );
-		echo '<input type="text" size="40" name="' . $this->option_name . '_member_id' . '" id="' . $this->option_name . '_member_id' . '" value="' . $member_id . '"><span class="description"> Enter everything after"a=" in your RSS URL</span>';
+		echo '<input type="text" size="40" name="' . $this->option_name . '[member_id]' . '" id="' . $this->option_name . '_member_id' . '" value="' . $this->options['member_id'] . '"><span class="description"> Enter everything after"a=" in your RSS URL</span>';
 	}
 
 	/**
@@ -222,8 +235,6 @@ class Kcm_Rss_Import {
 	 * @since  1.0.0
 	 */
 	public function kcm_rss_import_category_cb() {
-
-		$category = get_option( $this->option_name . '_category' );
 
 		$args = array(
 			'show_option_all'    => '',
@@ -237,9 +248,9 @@ class Kcm_Rss_Import {
 			'exclude'            => '',
 			'include'            => '',
 			'echo'               => 1,
-			'selected'           => $category,
+			'selected'           => $this->options['category'],
 			'hierarchical'       => 0,
-			'name'               => 'kcm_rss_import_category',
+			'name'               => 'kcm_rss_import[category]',
 			'id'                 => '',
 			'class'              => 'postform',
 			'depth'              => 0,
